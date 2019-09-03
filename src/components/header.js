@@ -1,14 +1,11 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
-import React, { useContext } from "react"
+import React from "react"
 import { FaShoppingCart } from "react-icons/fa"
 import "../style.scss"
 import logo from "../images/logo.svg"
 
-import { StoreContext } from "../context/StoreContext"
-
 const Header = ({ siteTitle }) => {
-  const { isCartOpen, client } = useContext(StoreContext)
   return (
     <header
       className="navbar"
