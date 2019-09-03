@@ -5,7 +5,7 @@ import { animated } from "react-spring"
 import { StoreContext } from "../../context/StoreContext"
 
 const Cart = ({ style }) => {
-  const { toggleCartOpen, checkout } = useContext(StoreContext)
+  const { toggleCartOpen, checkout, removeProductFromCart } = useContext(StoreContext)
 
   return (
     <animated.div
@@ -52,6 +52,9 @@ const Cart = ({ style }) => {
             <p className="subtitle is-5">${item.variant.price}</p>
             <p className="subtitle is-5">QTY: {item.quantity}</p>
             <button
+              onClick={() => {
+                removeProductFromCart(item.id)
+              }}
               className="is-small button is-danger is-outlined"
             >Remove</button>
           </div>
@@ -60,8 +63,8 @@ const Cart = ({ style }) => {
 
       <hr />
 
-      <h3 class="subtitle">Total Price:</h3>
-      <p class="title">{checkout.totalPrice}</p>
+      <h3 className="subtitle">Total Price:</h3>
+      <p className="title">{checkout.totalPrice}</p>
     </animated.div>
   )
 }
