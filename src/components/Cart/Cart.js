@@ -10,7 +10,9 @@ const Cart = ({ style }) => {
   return (
     <animated.div
       style={{
+        zIndex: 100,
         position: "fixed",
+        top: "0",
         right: "0",
         bottm: "0",
         width: "50%",
@@ -22,18 +24,44 @@ const Cart = ({ style }) => {
       }}
     >
       <button
+        style={{
+          position: "absolute",
+          top: "0",
+          right: "0",
+          padding: "1rem",
+          border: "none"
+
+        }}
         onClick={toggleCartOpen}
       >
-        <FaTimes style={{ color: "black", height: 30, width: 30 }} />
+        <FaTimes style={{ color: "var(--red)", height: 30, width: 30 }} />
       </button>
-      <h3>Cart</h3>
+      <h3 className="title">Cart</h3>
       {checkout.lineItems.map(item => (
-        <div key={item.id}>
-          <h4>{item.title}</h4>
-          <p>${item.variant.price}</p>
-          <p>{item.quantity}</p>
+        <div key={item.id} style={{display: "flex"}}>
+          <div style={{
+            width: 60,
+            height: 60,
+            marginRight: "1rem",
+            overflow: "hidden"
+          }}>
+            <img src={item.variant.image.src} alt={item.title} />
+          </div>
+          <div>
+            <h4 className="title is-4">{item.title}</h4>
+            <p className="subtitle is-5">${item.variant.price}</p>
+            <p className="subtitle is-5">QTY: {item.quantity}</p>
+            <button
+              className="is-small button is-danger is-outlined"
+            >Remove</button>
+          </div>
         </div>
       ))}
+
+      <hr />
+
+      <h3 class="subtitle">Total Price:</h3>
+      <p class="title">{checkout.totalPrice}</p>
     </animated.div>
   )
 }
