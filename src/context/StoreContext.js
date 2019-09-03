@@ -11,12 +11,15 @@ const defaultValues = {
   cart: [],
   addProductToCart: () => {},
   client,
+  checkout: {
+    lineItems: [],
+  },
 }
 
 export const StoreContext = createContext(defaultValues)
 
 export const StoreProvider = ({ children }) => {
-  const [checkout, setCheckout] = useState({})
+  const [checkout, setCheckout] = useState(defaultValues.checkout)
 
   useEffect(() => {
     initializeCheckout()
@@ -30,8 +33,6 @@ export const StoreProvider = ({ children }) => {
         ? localStorage.getItem("checkout_id")
         : null
 
-      console.log(currentCheckoutId)
-
       let newCheckout = null
       if (currentCheckoutId) {
         newCheckout = await client.checkout.fetch(currentCheckoutId)
@@ -41,7 +42,6 @@ export const StoreProvider = ({ children }) => {
         }
         newCheckout = await client.checkout.create()
       }
-      console.log(newCheckout)
 
       setCheckout(newCheckout)
     } catch (error) {
@@ -58,12 +58,12 @@ export const StoreProvider = ({ children }) => {
         },
       ]
 
-      const addItems = await client.checkout.addLineItems(
+      const newCheckout = await client.checkout.addLineItems(
         checkout.id,
         lineItems
       )
 
-      console.log(addItems.webUrl)
+      setCheckout(newCheckout)
     } catch (error) {
       console.error(error)
     }
@@ -73,6 +73,7 @@ export const StoreProvider = ({ children }) => {
     <StoreContext.Provider
       value={{
         ...defaultValues,
+        checkout,
         addProductToCart,
       }}
     >
