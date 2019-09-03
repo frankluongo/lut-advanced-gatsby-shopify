@@ -8,6 +8,7 @@ const client = Client.buildClient({
 
 const defaultValues = {
   isCartOpen: false,
+  toggleCartOpen: () => {},
   cart: [],
   addProductToCart: () => {},
   client,
@@ -20,6 +21,11 @@ export const StoreContext = createContext(defaultValues)
 
 export const StoreProvider = ({ children }) => {
   const [checkout, setCheckout] = useState(defaultValues.checkout)
+  const [isCartOpen, setCartOpen] = useState(false)
+
+  const toggleCartOpen = () => {
+    setCartOpen(!isCartOpen)
+  }
 
   useEffect(() => {
     initializeCheckout()
@@ -37,10 +43,10 @@ export const StoreProvider = ({ children }) => {
       if (currentCheckoutId) {
         newCheckout = await client.checkout.fetch(currentCheckoutId)
       } else {
+        newCheckout = await client.checkout.create()
         if (isBrowser) {
           localStorage.setItem("checkout_id", newCheckout.id)
         }
-        newCheckout = await client.checkout.create()
       }
 
       setCheckout(newCheckout)
@@ -65,6 +71,7 @@ export const StoreProvider = ({ children }) => {
 
       setCheckout(newCheckout)
     } catch (error) {
+      console.log('ERROR')
       console.error(error)
     }
   }
@@ -75,6 +82,8 @@ export const StoreProvider = ({ children }) => {
         ...defaultValues,
         checkout,
         addProductToCart,
+        toggleCartOpen,
+        isCartOpen
       }}
     >
       {children}

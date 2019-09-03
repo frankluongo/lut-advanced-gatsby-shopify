@@ -1,10 +1,14 @@
 import React, { useContext } from "react"
+import { FaTimes } from "react-icons/fa"
+import { animated } from "react-spring"
+
 import { StoreContext } from "../../context/StoreContext"
 
-const Cart = () => {
-  const { isCartOpen, checkout } = useContext(StoreContext)
+const Cart = ({ style }) => {
+  const { toggleCartOpen, checkout } = useContext(StoreContext)
+
   return (
-    <div
+    <animated.div
       style={{
         position: "fixed",
         right: "0",
@@ -14,8 +18,14 @@ const Cart = () => {
         background: "white",
         boxShadow: "var(--elevation-4)",
         padding: "1rem",
+        ...style
       }}
     >
+      <button
+        onClick={toggleCartOpen}
+      >
+        <FaTimes style={{ color: "black", height: 30, width: 30 }} />
+      </button>
       <h3>Cart</h3>
       {checkout.lineItems.map(item => (
         <div key={item.id}>
@@ -24,7 +34,7 @@ const Cart = () => {
           <p>{item.quantity}</p>
         </div>
       ))}
-    </div>
+    </animated.div>
   )
 }
 

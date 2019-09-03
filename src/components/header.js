@@ -1,12 +1,23 @@
 import { Link } from "gatsby"
 import PropTypes from "prop-types"
-import React from "react"
+import React, { useContext } from "react"
 import { FaShoppingCart } from "react-icons/fa"
+import { useTransition } from "react-spring"
+
 import "../style.scss"
 import logo from "../images/logo.svg"
 import Cart from "./Cart/Cart"
+import { StoreContext } from "../context/StoreContext";
 
-const Header = ({ siteTitle }) => {
+const Header = () => {
+  const { isCartOpen, toggleCartOpen } = useContext(StoreContext);
+
+  const transitions = useTransition(isCartOpen, null, {
+    from: { transform: 'translate3d(100%, 0, 0)' },
+    enter: { transform: 'translate3d(0, 0, 0)' },
+    leave: { transform: 'translate3d(100%, 0, 0)' },
+  })
+
   return (
     <header
       className="navbar"
@@ -23,13 +34,16 @@ const Header = ({ siteTitle }) => {
       </div>
       <div className="navbar-end">
         <div className="navbar-item">
-          <FaShoppingCart
-            // onClick={}
-            style={{ color: "white", height: 30, width: 30 }}
-          />
+          <button
+            onClick={toggleCartOpen}
+          >
+            <FaShoppingCart style={{ color: "white", height: 30, width: 30 }} />
+          </button>
         </div>
       </div>
-      <Cart />
+      {transitions.map(({ item, key, props}) => {
+        return item && <Cart key={key} style={props} />
+      })}
     </header>
   )
 }
