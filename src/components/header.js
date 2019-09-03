@@ -8,7 +8,7 @@ import logo from "../images/logo.svg"
 import { StoreContext } from "../context/StoreContext"
 
 const Header = ({ siteTitle }) => {
-  const { isCartOpen, addProductToCart, client } = useContext(StoreContext)
+  const { isCartOpen, client } = useContext(StoreContext)
   return (
     <header
       className="navbar"
@@ -26,7 +26,7 @@ const Header = ({ siteTitle }) => {
       <div className="navbar-end">
         <div className="navbar-item">
           <FaShoppingCart
-            onClick={addProductToCart}
+            // onClick={}
             style={{ color: "white", height: 30, width: 30 }}
           />
         </div>

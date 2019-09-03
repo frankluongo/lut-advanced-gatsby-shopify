@@ -9,17 +9,41 @@ const client = Client.buildClient({
 const defaultValues = {
   isCartOpen: false,
   cart: [],
-  addProductToCart: () => {
-    console.log("added!")
-  },
+  addProductToCart: () => {},
   client,
 }
 
 export const StoreContext = createContext(defaultValues)
 
 export const StoreProvider = ({ children }) => {
+  const addProductToCart = async variantId => {
+    try {
+      const newCheckout = await client.checkout.create()
+      const lineItems = [
+        {
+          variantId: variantId,
+          quantity: 1,
+        },
+      ]
+
+      const addItems = await client.checkout.addLineItems(
+        newCheckout.id,
+        lineItems
+      )
+
+      window.open(addItems.webUrl, "_blank")
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
-    <StoreContext.Provider value={defaultValues}>
+    <StoreContext.Provider
+      value={{
+        ...defaultValues,
+        addProductToCart,
+      }}
+    >
       {children}
     </StoreContext.Provider>
   )
