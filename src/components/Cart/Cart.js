@@ -5,7 +5,7 @@ import { animated } from "react-spring"
 import { StoreContext } from "../../context/StoreContext"
 
 const Cart = ({ style }) => {
-  const { toggleCartOpen, checkout, removeProductFromCart, checkCoupon } = useContext(StoreContext)
+  const { toggleCartOpen, checkout, removeProductFromCart, checkCoupon, removeCoupon } = useContext(StoreContext)
   const [ coupon, setCoupon ] = useState('')
 
   return (
@@ -64,24 +64,53 @@ const Cart = ({ style }) => {
 
       <hr />
 
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        checkCoupon(coupon)
-      }}>
-        <div className="field">
-          <label htmlFor="coupon" className="label">Coupon Code</label>
-          <input
-            id="coupon"
-            className="input"
-            value={coupon}
-            onChange={e => setCoupon(e.target.value)}
-            type="text"
-          />
+      { checkout.discountApplications.length > 0 ? (
+        <>
+        <h3 className="title">Applied Discounts:</h3>
+        <div style={{
+          border: '1px solid #eee',
+          padding: '1rem'
+        }}>
+          <p>
+            Discount Code: <span style={{color: 'var(--red)', fontWeight: 'bold'}}>{checkout.discountApplications[0].code}</span>
+          </p>
+          <p>
+            Discount Amount: <span style={{color: 'var(--red)', fontWeight: 'bold'}}>{checkout.discountApplications[0].value.percentage}%</span>
+          </p>
+          <button
+            onClick={() => {
+              removeCoupon(coupon)
+            }}
+            className="is-small button is-danger"
+            style={{marginTop: '1rem'}}
+          >
+            <FaTimes style={{ color: "white", height: 15, width: 15 }} />
+          </button>
         </div>
-        <button
-          className="button"
-          type="submit">Check Coupon</button>
-      </form>
+        </>
+      ) : (
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            checkCoupon(coupon)
+          }}>
+          <div className="field">
+            <label htmlFor="coupon" className="label">Coupon Code</label>
+            <input
+              id="coupon"
+              className="input"
+              value={coupon}
+              onChange={e => setCoupon(e.target.value)}
+              type="text"
+            />
+          </div>
+          <button
+            className="button"
+            type="submit">Check Coupon</button>
+        </form>
+      )
+
+    }
+
 
       <hr />
 
