@@ -1,11 +1,12 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { FaTimes } from "react-icons/fa"
 import { animated } from "react-spring"
 
 import { StoreContext } from "../../context/StoreContext"
 
 const Cart = ({ style }) => {
-  const { toggleCartOpen, checkout, removeProductFromCart } = useContext(StoreContext)
+  const { toggleCartOpen, checkout, removeProductFromCart, checkCoupon } = useContext(StoreContext)
+  const [ coupon, setCoupon ] = useState('')
 
   return (
     <animated.div
@@ -60,6 +61,27 @@ const Cart = ({ style }) => {
           </div>
         </div>
       ))}
+
+      <hr />
+
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        checkCoupon(coupon)
+      }}>
+        <div className="field">
+          <label htmlFor="coupon" className="label">Coupon Code</label>
+          <input
+            id="coupon"
+            className="input"
+            value={coupon}
+            onChange={e => setCoupon(e.target.value)}
+            type="text"
+          />
+        </div>
+        <button
+          className="button"
+          type="submit">Check Coupon</button>
+      </form>
 
       <hr />
 
