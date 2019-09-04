@@ -10,13 +10,19 @@ import Cart from "./Cart/Cart"
 import { StoreContext } from "../context/StoreContext";
 
 const Header = () => {
-  const { isCartOpen, toggleCartOpen } = useContext(StoreContext);
+  const { isCartOpen, toggleCartOpen, checkout } = useContext(StoreContext);
 
   const transitions = useTransition(isCartOpen, null, {
     from: { transform: 'translate3d(100%, 0, 0)' },
     enter: { transform: 'translate3d(0, 0, 0)' },
     leave: { transform: 'translate3d(100%, 0, 0)' },
   })
+
+  const qty = checkout.lineItems.reduce((total, item) => {
+    return + item.quantity;
+  }, 0)
+
+  console.log(qty)
 
   return (
     <header
@@ -38,10 +44,30 @@ const Header = () => {
             className="button"
             style={{
               border: "none",
-              background: "transparent"
+              background: "transparent",
+              position: 'relative'
             }}
             onClick={toggleCartOpen}
           >
+            {
+              qty > 0 &&
+              <div
+                style={{
+                  position: 'absolute',
+                  top: -5,
+                  right: -5,
+                  height: 20,
+                  width: 20,
+                  lineHeight: '20px',
+                  fontSize: '0.75rem',
+                  background: 'var(--red)',
+                  borderRadius: '50%',
+                  color: 'white'
+                }}
+              >
+              {qty}
+              </div>
+            }
             <FaShoppingCart style={{ color: "white", height: 30, width: 30 }} />
           </button>
         </div>
