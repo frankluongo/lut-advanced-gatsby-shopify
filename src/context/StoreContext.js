@@ -23,6 +23,7 @@ export const StoreContext = createContext(defaultValues)
 export const StoreProvider = ({ children }) => {
   const [checkout, setCheckout] = useState(defaultValues.checkout)
   const [isCartOpen, setCartOpen] = useState(false)
+  const isBrowser = typeof window !== "undefined"
 
   const toggleCartOpen = () => {
     setCartOpen(!isCartOpen)
@@ -32,24 +33,32 @@ export const StoreProvider = ({ children }) => {
     initializeCheckout()
   }, [])
 
+  const getNewId = async () => {
+    try {
+      const newCheckout = await client.checkout.create()
+      if (isBrowser) {
+        localStorage.setItem("checkout_id", newCheckout.id)
+      }
+      return newCheckout
+
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
   const initializeCheckout = async () => {
     try {
-      const isBrowser = typeof window !== "undefined"
-
-      const currentCheckoutId = isBrowser
-        ? localStorage.getItem("checkout_id")
-        : null
-
+      const currentCheckoutId = isBrowser ? localStorage.getItem("checkout_id") : null
       let newCheckout = null
+
       if (currentCheckoutId) {
         newCheckout = await client.checkout.fetch(currentCheckoutId)
-      } else {
-        newCheckout = await client.checkout.create()
-        if (isBrowser) {
-          localStorage.setItem("checkout_id", newCheckout.id)
+        if (newCheckout.completedAt) {
+          newCheckout = await getNewId()
         }
+      } else {
+        newCheckout = await getNewId()
       }
-
       setCheckout(newCheckout)
     } catch (error) {
       console.error(error)
@@ -86,7 +95,6 @@ export const StoreProvider = ({ children }) => {
 
       setCheckout(newCheckout)
     } catch (error) {
-      console.log('ERROR')
       console.error(error)
     }
   }
