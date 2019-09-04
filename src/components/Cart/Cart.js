@@ -65,6 +65,10 @@ const Cart = ({ style }) => {
 
       <h3 className="subtitle">Total Price:</h3>
       <p className="title">{checkout.totalPrice}</p>
+
+      <hr />
+      <a className="button is-fullwidth is-success" href={checkout.webUrl}>Place Order</a>
+
     </animated.div>
   )
 }

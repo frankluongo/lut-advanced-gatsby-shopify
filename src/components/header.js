@@ -22,8 +22,6 @@ const Header = () => {
     return + item.quantity;
   }, 0)
 
-  console.log(qty)
-
   return (
     <header
       className="level is-mobile"
