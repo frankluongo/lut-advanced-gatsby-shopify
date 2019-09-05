@@ -8,6 +8,7 @@ const Nav = () => {
         allShopifyCollection {
           edges {
             node {
+              id
               title
               handle
             }
@@ -21,7 +22,13 @@ const Nav = () => {
     <nav>
       {allShopifyCollection.edges.map(edge => {
         return (
-          <Link to={`/collections/${edge.node.handle}`}>{edge.node.title}</Link>
+          <Link
+            style={{ color: "#fff", marginLeft: "1rem" }}
+            key={edge.node.id}
+            to={`/collections/${edge.node.handle}`}
+          >
+            {edge.node.title}
+          </Link>
         )
       })}
     </nav>

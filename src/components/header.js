@@ -12,9 +12,7 @@ import Loader from "./Loader"
 import Nav from "./Nav"
 
 const Header = () => {
-  const { isCartOpen, toggleCartOpen, checkout, isLoading } = useContext(
-    StoreContext
-  )
+  const { isCartOpen, toggleCartOpen, checkout } = useContext(StoreContext)
 
   const transitions = useTransition(isCartOpen, null, {
     from: { transform: "translate3d(100%, 0, 0)" },
